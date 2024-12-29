@@ -9,10 +9,16 @@ import { auth } from "../../firebase/firebase";
 import { RiAccountCircle2Fill, RiAccountCircleFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
+import Switch from "../Darkmode/Switch";
 
 const Navbar = ({ user }) => {
   const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsMobile(!isMobile);
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -43,7 +49,6 @@ const Navbar = ({ user }) => {
               </Link>
             </h1>
           </div>
-
           {/* Hamburger Icon for Mobile */}
           <div className="md:hidden flex items-center space-x-5">
             {!user && (
@@ -83,7 +88,11 @@ const Navbar = ({ user }) => {
               </li>
             ))}
           </ul>
-
+          <div className="flex items-center justify-center t-0 relative -top-3">
+            <button onClick={toggleTheme}>
+              <Switch />
+            </button>
+          </div>
           {/* Logout Button (Visible only when logged in) */}
           {user && (
             <div className="flex items-center justify-center space-x-5">
@@ -104,7 +113,7 @@ const Navbar = ({ user }) => {
               </Link>
               {/* notification */}
               <Link to="/notification">
-                <Badge color="success" badgeContent={1}>
+                <Badge color="success" badgeContent={0}>
                   <IoIosNotifications
                     size={35}
                     className="text-white"
