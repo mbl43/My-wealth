@@ -1,0 +1,10 @@
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+.top-72x {
+  top: 72px;
+}
