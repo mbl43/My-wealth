@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button, Tooltip } from "@mui/material";
 import Badge from "@mui/material/Badge";
-import { IoCloseSharp } from "react-icons/io5";
+import { IoCloseSharp, IoLogOutOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
@@ -63,7 +63,7 @@ const Navbar = ({ user }) => {
           <ul
             className={`font-medium md:flex gap-x-3 transition-transform duration-300 ${
               isMobile
-                ? "flex flex-col absolute z-10 top-72x left-0 w-full bg-[#051378] p-4 items-center h-screen justify-center gap-y-4"
+                ? "flex flex-col absolute z-10 top-62x left-0 w-full bg-[#051378] p-4 items-center h-screen justify-center gap-y-4"
                 : "hidden md:flex"
             }`}
             onClick={() => setIsMobile(false)} // Close menu on link click
@@ -98,21 +98,22 @@ const Navbar = ({ user }) => {
                       if (e.key === "Enter") console.log("Profile activated");
                     }}
                   >
-                    <RiAccountCircle2Fill size={40} className="text-white" />
+                    <RiAccountCircle2Fill size={35} className="text-white" />
                   </div>
                 </Tooltip>
               </Link>
-
+              {/* notification */}
               <Link to="/notification">
                 <Badge color="success" badgeContent={1}>
                   <IoIosNotifications
-                    size={40}
+                    size={35}
                     className="text-white"
                     color="action"
                   />
                 </Badge>
               </Link>
-              <Button
+              {/* logout */}
+              {/* <Button
                 onClick={handleLogout}
                 variant="contained"
                 sx={{
@@ -123,8 +124,10 @@ const Navbar = ({ user }) => {
                 }}
                 className="hidden md:inline-block font-medium text-white text-base px-5 py-2 rounded-lg hover:bg-[#4afc70] shadow-lg transition-transform transform hover:scale-105 duration-200 capitalize"
               >
-                Logout
-              </Button>
+              </Button> */}
+              <button onClick={handleLogout}>
+                <IoLogOutOutline size={35} className="text-white" />
+              </button>
             </div>
           )}
 
