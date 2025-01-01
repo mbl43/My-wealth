@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Home, Notfound, Notification } from "./pages/index";
-import { Login, SignUp, Dashboard } from "./components/index";
-import Profile from "./components/Profile";
+import { Login, SignUp, Dashboard ,Profile} from "./components/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AnimatedCursor from "react-animated-cursor";
