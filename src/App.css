@@ -8,3 +8,10 @@ body {
 .top-62x {
   top: 62px;
 }
+html {
+  --cursor-color: #333
+}
+
+html.dark-mode {
+  --cursor-color: #fff
+}
