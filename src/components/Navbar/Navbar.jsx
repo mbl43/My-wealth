@@ -96,21 +96,7 @@ const Navbar = ({ user }) => {
           {/* Logout Button (Visible only when logged in) */}
           {user && (
             <div className="flex items-center justify-center space-x-5">
-              <Link to="/profile">
-                <Tooltip title="Profile" arrow>
-                  <div
-                    className="cursor-pointer"
-                    role="button"
-                    tabIndex={0}
-                    aria-label="Profile"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") console.log("Profile activated");
-                    }}
-                  >
-                    <RiAccountCircle2Fill size={35} className="text-white" />
-                  </div>
-                </Tooltip>
-              </Link>
+              
               {/* notification */}
               <Link to="/notification">
                 <Badge color="success" badgeContent={0}>
