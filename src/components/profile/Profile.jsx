@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
-import Navbar from "./Navbar/Navbar";
+import {Navbar} from "../index"
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
