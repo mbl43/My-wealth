@@ -1,10 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Home, Notfound, Notification } from "./pages/index";
-import { Login, SignUp, Dashboard ,Profile} from "./components/index";
+import { Login, SignUp, Dashboard ,Profile,Sip} from "./components/index";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AnimatedCursor from "react-animated-cursor";
 function App() {
   return (
     <>
@@ -18,25 +17,9 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/" index element={<Home />} />
           <Route path="/notification" element={<Notification />} />
+          <Route path="/sip" element={<Sip />} />
         </Routes>
       </BrowserRouter>
-      <AnimatedCursor
-        innerSize={8}
-        outerSize={35}
-        innerScale={1}
-        outerScale={2}
-        outerAlpha={0}
-        zIndex={9999}
-        hasBlendMode={true}
-        innerStyle={{
-          backgroundColor: "var(--cursor-color)",
-          pointerEvents: "none",
-        }}
-        outerStyle={{
-          border: "3px solid var(--cursor-color)",
-          pointerEvents: "none",
-        }}
-      />
       <ToastContainer
         position="top-right"
         autoClose={1200}
