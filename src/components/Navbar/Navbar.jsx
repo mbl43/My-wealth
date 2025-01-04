@@ -14,9 +14,9 @@ import Switch from "../Darkmode/Switch";
 const Navbar = ({ user }) => {
   const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsMobile(!isMobile);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const Navbar = ({ user }) => {
           <ul
             className={`font-medium md:flex gap-x-3 transition-transform duration-300 ${
               isMobile
-                ? "flex flex-col absolute z-10 top-62x left-0 w-full bg-[#051378] p-4 items-center h-screen justify-center gap-y-4"
+                ? "flex flex-col  z-10   w-full bg-[#051378] p-4 items-center  justify-center gap-y-4 absolute top-full left-0 right-0"
                 : "hidden md:flex"
             }`}
             onClick={() => setIsMobile(false)} // Close menu on link click
@@ -81,7 +81,7 @@ const Navbar = ({ user }) => {
                     color: isActive && "#4afc70",
                   })}
                   to={text === "Home" ? "/" : `/${text.toLowerCase()}`}
-                  className="text-white hover:text-[#4afc70] transition duration-300 text-3xl md:text-lg font-medium"
+                  className="text-white hover:text-[#4afc70] transition duration-300 text-xl md:text-lg font-medium"
                 >
                   {text}
                 </NavLink>
@@ -96,7 +96,6 @@ const Navbar = ({ user }) => {
           {/* Logout Button (Visible only when logged in) */}
           {user && (
             <div className="flex items-center justify-center space-x-5">
-              
               {/* notification */}
               <Link to="/notification">
                 <Badge color="success" badgeContent={0}>
@@ -108,18 +107,7 @@ const Navbar = ({ user }) => {
                 </Badge>
               </Link>
               {/* logout */}
-              {/* <Button
-                onClick={handleLogout}
-                variant="contained"
-                sx={{
-                  backgroundColor: "#008000",
-                  fontFamily: "Poppins, Arial, sans-serif",
-                  fontSize: "16px",
-                  textTransform: "capitalize",
-                }}
-                className="hidden md:inline-block font-medium text-white text-base px-5 py-2 rounded-lg hover:bg-[#4afc70] shadow-lg transition-transform transform hover:scale-105 duration-200 capitalize"
-              >
-              </Button> */}
+           
               <button onClick={handleLogout}>
                 <IoLogOutOutline size={35} className="text-white" />
               </button>

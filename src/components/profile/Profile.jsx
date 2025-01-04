@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import {Navbar} from "../index"
+import { useUser } from "../../contextAPI";
 const Profile = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const {user} = useUser()
   const navigate = useNavigate();
 
   useEffect(() => {
