@@ -6,4 +6,5 @@ import SignUp from "./Signup/SignUp"
 import Dashboard from "./Dashboard/Dashboard"
 import Sidebar from "./Sidebar/Sidebar"
 import Profile from "./profile/Profile"
-export{Footer,Navbar,Hero,Login,SignUp,Dashboard,Sidebar,Profile}
+import Sip from "./Sip/Sip"
+export{Footer,Navbar,Hero,Login,SignUp,Dashboard,Sidebar,Profile,Sip}
