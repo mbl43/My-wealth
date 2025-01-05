@@ -23,10 +23,10 @@ const SignUp = () => {
 
     try {
       const response = await emailjs.send(
-        "service_k34f7tp", // Your EmailJS service ID
-        "template_g975m0f", // Your EmailJS template ID
+        "service_k34f7tp", //  EmailJS service ID
+        "template_g975m0f", //  EmailJS template ID
         templateParams,
-        "DEVywm1c0-ncWm9fi" // Your public key
+        "DEVywm1c0-ncWm9fi" //  public key
       );
       console.log("Email sent successfully!", response.status, response.text);
     } catch (error) {
