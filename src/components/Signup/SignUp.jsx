@@ -4,36 +4,56 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../index";
 import { toast } from "react-toastify";
+import emailjs from "@emailjs/browser";
+import { useUser } from "../../contextAPI";
 
 const SignUp = () => {
+  const {user}=useUser()
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [name, setname] = useState("");
   const navigate = useNavigate();
 
+  // Send a welcome email
+  const sendWelcomeEmail = async (userName, userEmail) => {
+    const templateParams = {
+      user_name: userName,
+      user_email: userEmail,
+    };
+
+    try {
+      const response = await emailjs.send(
+        "service_k34f7tp", // Your EmailJS service ID
+        "template_g975m0f", // Your EmailJS template ID
+        templateParams,
+        "DEVywm1c0-ncWm9fi" // Your public key
+      );
+      console.log("Email sent successfully!", response.status, response.text);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      toast.error("Failed to send welcome email.");
+    }
+  };
+
+  // Handle signup
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Use updateProfile with the user object
-      await updateProfile(user, {
-        displayName: name,
-      });
-
-      console.log(userCredential);
+      // Update profile with the display name
+      await updateProfile(user, { displayName: name });
 
       // Store user info in localStorage
       localStorage.setItem("token", user.accessToken);
       localStorage.setItem("user", JSON.stringify(user));
-      toast.success(
-        `Account created Successfully! Welcome ${user.displayName}`
-      );
+
+      toast.success(`Account created Successfully! Welcome ${user.displayName}`);
+
+      // Send a welcome email
+      await sendWelcomeEmail(user.displayName, user.email);
+
       navigate("/");
     } catch (error) {
       toast.error("Something Went Wrong");
@@ -43,7 +63,7 @@ const SignUp = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user}/>
       <form
         onSubmit={handlesubmit}
         className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg space-y-4"
