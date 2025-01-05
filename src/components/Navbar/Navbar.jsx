@@ -10,10 +10,8 @@ import { RiAccountCircleFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
 import Switch from "../Darkmode/Switch";
-import { useUser } from "../../contextAPI";
 
-const Navbar = () => {
-  const user=useUser()
+const Navbar = ({user}) => {
   const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsMobile(!isMobile);
   const [theme, setTheme] = useState("light");

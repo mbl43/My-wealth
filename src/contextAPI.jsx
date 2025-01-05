@@ -1,34 +1,123 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase/firebase'; // Adjust this import path as needed
 
-// Create the UserContext
-const UserContext = createContext();
+// Create context with initial values
+const UserContext = createContext({
+  user: null,
+  loading: true,
+  error: null,
+  updateUser: () => {},
+  clearUser: () => {},
+});
 
-// Define the UserProvider component
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        try {
-            const retrievedUser = JSON.parse(localStorage.getItem("user"));
-            setUser(retrievedUser);
-        } catch (error) {
-            console.error("Error parsing user data from localStorage:", error);
-            setUser(null);
+  // Function to safely store user data in localStorage
+  const saveUserToStorage = (userData) => {
+    try {
+      if (userData) {
+        localStorage.setItem('user', JSON.stringify(userData));
+      } else {
+        localStorage.removeItem('user');
+      }
+    } catch (err) {
+      console.error('Error saving user to localStorage:', err);
+      setError(err instanceof Error ? err : new Error('Failed to save user data'));
+    }
+  };
+
+  // Function to update user data
+  const updateUser = (userData) => {
+    setUser(userData);
+    saveUserToStorage(userData);
+  };
+
+  // Function to clear user data
+  const clearUser = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  useEffect(() => {
+    // First, try to get user from localStorage
+    const initializeUserFromStorage = () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
         }
-    }, []); // Empty dependency array ensures this runs only once on mount
+      } catch (err) {
+        console.error('Error reading from localStorage:', err);
+        localStorage.removeItem('user'); // Clear potentially corrupted data
+      }
+    };
 
-    return (
-        <UserContext.Provider value={{ user, setUser }}>
-            {children}
-        </UserContext.Provider>
+    // Then, set up Firebase auth listener
+    const unsubscribe = onAuthStateChanged(
+      auth, 
+      (firebaseUser) => {
+        if (firebaseUser) {
+          // Transform Firebase user into your user object
+          const userData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            // Add other properties you need
+          };
+          updateUser(userData);
+        } else {
+          clearUser();
+        }
+        setLoading(false);
+      },
+      (err) => {
+        console.error('Auth state change error:', err);
+        setError(err);
+        setLoading(false);
+      }
     );
+
+    // Initialize from storage immediately
+    initializeUserFromStorage();
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, []);
+
+  // Memoize context value to prevent unnecessary rerenders
+  const contextValue = React.useMemo(
+    () => ({
+      user,
+      loading,
+      error,
+      updateUser,
+      clearUser,
+    }),
+    [user, loading, error]
+  );
+
+  return (
+    <UserContext.Provider value={contextValue}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-// Custom hook to use UserContext
+// Custom hook with error boundary
 export const useUser = () => {
-    const context = useContext(UserContext);
-    if (!context) {
-        throw new Error("useUser must be used within a UserProvider");
-    }
-    return context;
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
+};
+
+// Simple hook that only returns user data
+export const useUserData = () => {
+  const { user } = useUser();
+  return user;
 };

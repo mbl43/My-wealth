@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { auth } from "../../firebase/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../index";
 import { toast } from "react-toastify";
@@ -41,9 +41,6 @@ const SignUp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Update profile with the display name
-      await updateProfile(user, { displayName: name });
 
       // Store user info in localStorage
       localStorage.setItem("token", user.accessToken);
