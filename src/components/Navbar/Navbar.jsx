@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Button, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import { IoCloseSharp, IoLogOutOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
-import { RiAccountCircle2Fill, RiAccountCircleFill } from "react-icons/ri";
+import { RiAccountCircleFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
 import Switch from "../Darkmode/Switch";
+import { useUser } from "../../contextAPI";
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
+  const user=useUser()
   const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsMobile(!isMobile);
   const [theme, setTheme] = useState("light");
@@ -107,7 +109,7 @@ const Navbar = ({ user }) => {
                 </Badge>
               </Link>
               {/* logout */}
-           
+
               <button onClick={handleLogout}>
                 <IoLogOutOutline size={35} className="text-white" />
               </button>
