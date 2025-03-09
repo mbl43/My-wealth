@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase/firebase'; 
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase/firebase";
 import { signOut } from "firebase/auth";
 // Create context with initial values
 const UserContext = createContext({
@@ -20,21 +20,18 @@ export const UserProvider = ({ children }) => {
   const saveUserToStorage = (userData) => {
     try {
       if (userData) {
-        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem("user", JSON.stringify(userData));
       } else {
-        localStorage.removeItem('user');
+        localStorage.removeItem("user");
       }
     } catch (err) {
-      console.error('Error saving user to localStorage:', err);
-      setError(err instanceof Error ? err : new Error('Failed to save user data'));
+      console.error("Error saving user to localStorage:", err);
+      setError(
+        err instanceof Error ? err : new Error("Failed to save user data")
+      );
     }
   };
 
-
-  useEffect(() => {
-    console.log("User state updated:", user);
-  }, [user]);
-  
   // Function to update user data
   const updateUser = (userData) => {
     setUser(userData);
@@ -47,7 +44,7 @@ export const UserProvider = ({ children }) => {
       await signOut(auth); // Sign out from Firebase
       setUser(null);
       localStorage.removeItem("user");
-        } catch (err) {
+    } catch (err) {
       console.error("Error signing out:", err);
     }
   };
@@ -55,19 +52,19 @@ export const UserProvider = ({ children }) => {
     // First, try to get user from localStorage
     const initializeUserFromStorage = () => {
       try {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem("user");
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
       } catch (err) {
-        console.error('Error reading from localStorage:', err);
-        localStorage.removeItem('user'); // Clear potentially corrupted data
+        console.error("Error reading from localStorage:", err);
+        localStorage.removeItem("user"); // Clear potentially corrupted data
       }
     };
 
     // Then, set up Firebase auth listener
     const unsubscribe = onAuthStateChanged(
-      auth, 
+      auth,
       (firebaseUser) => {
         if (firebaseUser) {
           // Transform Firebase user into your user object
@@ -84,7 +81,7 @@ export const UserProvider = ({ children }) => {
         setLoading(false);
       },
       (err) => {
-        console.error('Auth state change error:', err);
+        console.error("Auth state change error:", err);
         setError(err);
         setLoading(false);
       }
@@ -110,9 +107,7 @@ export const UserProvider = ({ children }) => {
   );
 
   return (
-    <UserContext.Provider value={contextValue}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
 
@@ -120,7 +115,7 @@ export const UserProvider = ({ children }) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };
