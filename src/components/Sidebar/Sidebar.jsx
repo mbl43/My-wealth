@@ -60,8 +60,8 @@ export default function Sidebar() {
   return (
     <div className="relative z-999" style={{ height }}>
       <aside
-        className={`h-full transition-all duration-300 ease-in-out bg-gradient-to-b from-indigo-900 via-blue-900 to-blue-950
-        ${isExpanded ? "w-60" : "w-20"} shadow-2xl rounded-r-2xl`}
+        className={`h-[calc(100vh-80px)] md:h-full transition-all duration-300 ease-in-out bg-gradient-to-b from-indigo-900 via-blue-900 to-blue-950
+        ${isExpanded ? "w-52" : "w-18"} shadow-2xl rounded-r-2xl`}
       >
         <nav className="h-full flex flex-col">
           {/* Sidebar Header */}
@@ -107,7 +107,7 @@ export default function Sidebar() {
               <div className="relative">
                 <img
                   src={user.avatar}
-                  alt={user.displayName}
+                  alt="User"
                   className="w-10 h-10 rounded-full ring-2 ring-emerald-300/50 transition-all duration-200 group-hover:ring-emerald-300"
                 />
               </div>
