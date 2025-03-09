@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.bg-black{
+ background: transparent;   
+ backdrop-filter: blur(3px);
+}
+.not-blur{
+ backdrop-filter: none;
+}
