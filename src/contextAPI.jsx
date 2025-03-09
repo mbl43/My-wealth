@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase/firebase'; // Adjust this import path as needed
-
+import { auth } from './firebase/firebase'; 
+import { signOut } from "firebase/auth";
 // Create context with initial values
 const UserContext = createContext({
   user: null,
@@ -30,6 +30,11 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+
+  useEffect(() => {
+    console.log("User state updated:", user);
+  }, [user]);
+  
   // Function to update user data
   const updateUser = (userData) => {
     setUser(userData);
@@ -37,11 +42,15 @@ export const UserProvider = ({ children }) => {
   };
 
   // Function to clear user data
-  const clearUser = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const clearUser = async () => {
+    try {
+      await signOut(auth); // Sign out from Firebase
+      setUser(null);
+      localStorage.removeItem("user");
+        } catch (err) {
+      console.error("Error signing out:", err);
+    }
   };
-
   useEffect(() => {
     // First, try to get user from localStorage
     const initializeUserFromStorage = () => {
