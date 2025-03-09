@@ -12,7 +12,7 @@ const DialogBox = ({ uid }) => {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!uid) return;
-    setOpen(true);
+    if (Math.floor(Math.random() * 10) === 1) return setOpen(true);
   }, [uid]);
   const handleClose = useCallback(() => {
     if (!uid) return;
@@ -28,7 +28,7 @@ const DialogBox = ({ uid }) => {
         </Typography>
       </DialogHeader>
       <DialogBody divider className="grid place-items-center gap-4">
-        <Megaphone size={50}/>
+        <Megaphone size={50} />
         <Typography color="red" variant="h4">
           You should read this!
         </Typography>
