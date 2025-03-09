@@ -40,7 +40,7 @@ const Modal = () => {
         className="p-2 max-w-[550px] text-center mx-auto"
       >
         <DialogHeader className="relative m-0 block">
-          <Typography variant="h4" color="blue-gray" className="capitalize">
+          <Typography variant="h4" color="blue-gray" className="capitalize mx-5">
             Add Investment details Monthly
           </Typography>
           <Typography className="mt-1 font-normal text-gray-600">
