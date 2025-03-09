@@ -41,7 +41,7 @@ const Modal = () => {
       >
         <DialogHeader className="relative m-0 block">
           <Typography variant="h4" color="blue-gray" className="capitalize mx-5">
-            Add Investment details Monthly
+            Add Investment details
           </Typography>
           <Typography className="mt-1 font-normal text-gray-600">
             Keep your records up-to-date and organized.
