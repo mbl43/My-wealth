@@ -1,5 +1,5 @@
 import React from "react";
-import { Sidebar, Navbar } from "../index";
+import { Sidebar, Navbar, Modal } from "../index";
 import { useUser } from "../../contextAPI";
 
 const Dashboard = () => {
@@ -12,18 +12,24 @@ const Dashboard = () => {
       <Navbar user={user} />
 
       {/* Sidebar below Navbar */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 w-full ">
         <Sidebar />
 
         {/* Main Dashboard Content */}
-        <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+        <div className="overflow-y-auto flex justify-between w-[100vw] h-full">
           {/* Greeting */}
-          <h1 className="text-3xl font-semibold text-gray-800">
-            Welcome back,{" "}
-            <span className="font-bold text-[#4afc70]">
-              {user?.displayName}!
-            </span>
-          </h1>
+          <div className="m-3">
+            <h1 className="text-xl md:text-3xl font-semibold text-gray-800">
+              Welcome back,{" "}
+              <span className="font-bold text-blue-500">
+                {user?.displayName}!
+              </span>
+            </h1>
+          </div>
+          {/* Modal */}
+          <div className="m-2">
+            <Modal />
+          </div>
         </div>
       </div>
     </div>
