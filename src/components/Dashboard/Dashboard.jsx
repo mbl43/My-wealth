@@ -1,5 +1,4 @@
-import React from "react";
-import { Sidebar, Navbar, Modal } from "../index";
+import { Sidebar, Navbar, Modal, Dialog } from "../index";
 import { useUser } from "../../contextAPI";
 
 const Dashboard = () => {
@@ -12,11 +11,11 @@ const Dashboard = () => {
       <Navbar user={user} />
 
       {/* Sidebar below Navbar */}
-      <div className="flex flex-1 w-full ">
+      <div className="flex flex-1 w-full">
         <Sidebar />
 
         {/* Main Dashboard Content */}
-        <div className="overflow-y-auto flex justify-between w-[100vw] h-full">
+        <div className="overflow-y-auto flex justify-between w-[100vw] h-full flex-wrap">
           {/* Greeting */}
           <div className="m-3">
             <h1 className="text-xl md:text-3xl font-semibold text-gray-800">
@@ -31,6 +30,9 @@ const Dashboard = () => {
             <Modal />
           </div>
         </div>
+
+        {/* Dialog */}
+        {user && <Dialog uid={user.uid} />}
       </div>
     </div>
   );
