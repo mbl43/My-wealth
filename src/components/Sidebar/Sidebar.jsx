@@ -19,11 +19,13 @@ export default function Sidebar() {
   // Get user from localStorage safely
   const user = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem("user")) || {
-        email: "guest@example.com",
-        displayName: "Guest User",
-        avatar: "/api/placeholder/40/40",
-      };
+      return (
+        JSON.parse(localStorage.getItem("user")) || {
+          email: "guest@example.com",
+          displayName: "Guest User",
+          avatar: "/api/placeholder/40/40",
+        }
+      );
     } catch {
       return {
         email: "guest@example.com",
@@ -50,7 +52,6 @@ export default function Sidebar() {
       { name: "Dashboard", path: "/", icon: Home },
       { name: "SIP Calculator", path: "/sip", icon: Calculator },
       { name: "Loss Recovery", path: "/loss", icon: LineChart },
-      { name: "EMI Repayment", path: "/emi", icon: CreditCard },
       { name: "Stock Average", path: "/stockaverage", icon: FileBarChart },
       { name: "Profile", path: "/profile", icon: CircleUser },
     ],
@@ -75,7 +76,11 @@ export default function Sidebar() {
               onClick={() => setIsExpanded(!isExpanded)}
               className="p-2 rounded-lg hover:bg-blue-800/50 text-emerald-200 transition-all duration-200 hover:scale-105"
             >
-              {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+              {isExpanded ? (
+                <ChevronLeft size={24} />
+              ) : (
+                <ChevronRight size={24} />
+              )}
             </button>
           </div>
 
@@ -95,7 +100,11 @@ export default function Sidebar() {
                   `}
                 >
                   <Icon size={20} className="flex-shrink-0" strokeWidth={2} />
-                  {isExpanded && <span className="ml-3 font-medium text-sm tracking-wide">{name}</span>}
+                  {isExpanded && (
+                    <span className="ml-3 font-medium text-sm tracking-wide">
+                      {name}
+                    </span>
+                  )}
                 </NavLink>
               </li>
             ))}
@@ -113,7 +122,9 @@ export default function Sidebar() {
               </div>
               {isExpanded && (
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{user.displayName}</p>
+                  <p className="text-sm font-medium text-white truncate">
+                    {user.displayName}
+                  </p>
                   <p className="text-xs text-blue-200 truncate">{user.email}</p>
                 </div>
               )}
