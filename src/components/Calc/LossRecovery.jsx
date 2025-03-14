@@ -23,8 +23,8 @@ const LossRecovery = () => {
     const Stock_buy_price = parseFloat(data["Stock_Buy_Price"]);
     const Quantity_Of_Stock = parseFloat(data["Quantity_Of_Stock"]);
     const Stock_Sell_Price = parseFloat(data["Stock_Sell_Price"]);
-    const buy_value=Stock_buy_price * Quantity_Of_Stock;
-    const sell_value=Stock_Sell_Price * Quantity_Of_Stock;
+    const buy_value = Stock_buy_price * Quantity_Of_Stock;
+    const sell_value = Stock_Sell_Price * Quantity_Of_Stock;
     setbuy_value(buy_value);
     setsell_value(sell_value);
     if (sell_value > buy_value) {
@@ -33,14 +33,16 @@ const LossRecovery = () => {
       const total_percentage = (total_profit / buy_value) * 100;
       setpercentage(total_percentage.toFixed(2));
       setloss(0);
-    setpercentage_loss(0);
+      setpercentage_loss(0);
     } else {
       const total_loss = buy_value - sell_value;
       setloss(total_loss);
-      const total_percentage_loss = buy_value ? ((total_loss * 100) / buy_value).toFixed(2) : 0;
+      const total_percentage_loss = buy_value
+        ? ((total_loss * 100) / buy_value).toFixed(2)
+        : 0;
       setpercentage_loss(total_percentage_loss);
-      setprofit(0)
-      setpercentage(0)
+      setprofit(0);
+      setpercentage(0);
     }
     console.log("Stock Buy Price: ", Stock_buy_price);
     console.log("Quantity Of Stock: ", Quantity_Of_Stock);
@@ -146,38 +148,42 @@ const LossRecovery = () => {
           </form>
 
           {/* Results section */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-2xl shadow-inner">
-            <div className="flex flex-col gap-1 text-center">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Results
-              </h3>
-              <p className="text-xl font-semibold mt-1">
-                {loss ? (
-                  <span className="text-red-500">
-                    Need a gain to recover your Loss On Remaining Capital%:{" "}
-                    {percentage_loss} %
-                  </span>
-                ) : (
-                  <>
-                    Profit In %:
-                    <span className="font-medium"> {percentage} %</span>
-                  </>
-                )}
-              </p>
+          {buy_value ? (
+            <div className="mt-8 p-4 bg-gray-50 rounded-2xl shadow-inner">
+              <div className="flex flex-col gap-1 text-center">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  Results
+                </h3>
+                <p className="text-xl font-semibold mt-1">
+                  {loss ? (
+                    <span className="text-red-500">
+                      Need a gain to recover your Loss On Remaining Capital%:{" "}
+                      {percentage_loss} %
+                    </span>
+                  ) : (
+                    <>
+                      Profit In %:
+                      <span className="font-medium"> {percentage} %</span>
+                    </>
+                  )}
+                </p>
 
-              <p className="text-xl font-semibold mt-1">
-                {profit ? (
-                  <span className="text-green-600 font-bold">
-                    Profit in INR: {profit} ₹
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-bold">
-                    Loss In INR: {loss} ₹
-                  </span>
-                )}
-              </p>
+                <p className="text-xl font-semibold mt-1">
+                  {profit ? (
+                    <span className="text-green-600 font-bold">
+                      Profit in INR: {profit} ₹
+                    </span>
+                  ) : (
+                    <span className="text-red-600 font-bold">
+                      Loss In INR: {loss} ₹
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>
