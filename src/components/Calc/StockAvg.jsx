@@ -169,29 +169,33 @@ const StockAvg = () => {
           </form>
 
           {/* Results section */}
-          <div className="mt-8 p-6 bg-gray-50 rounded-2xl shadow-inner">
-            <div className="flex flex-col gap-3 text-center">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Results
-              </h3>
-              <p className="text-lg">
-                Total Amount:{" "}
-                <span className="font-medium">
-                  {firstbuy_avg + secondbuy_avg} ₹
-                </span>
-              </p>
-              <p className="text-lg">
-                Total Quantity:{" "}
-                <span className="font-medium">{TotalQuantity}</span>
-              </p>
-              <p className="text-xl font-semibold mt-1">
-                Average Price per Stock:{" "}
-                <span className="text-green-600 font-bold">
-                  {avg_price_stock} ₹
-                </span>
-              </p>
+          {firstbuy_avg ? (
+            <div className="mt-8 p-6 bg-gray-50 rounded-2xl shadow-inner">
+              <div className="flex flex-col gap-3 text-center">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  Results
+                </h3>
+                <p className="text-lg">
+                  Total Amount:{" "}
+                  <span className="font-medium">
+                    {firstbuy_avg + secondbuy_avg} ₹
+                  </span>
+                </p>
+                <p className="text-lg">
+                  Total Quantity:{" "}
+                  <span className="font-medium">{TotalQuantity}</span>
+                </p>
+                <p className="text-xl font-semibold mt-1">
+                  Average Price per Stock:{" "}
+                  <span className="text-green-600 font-bold">
+                    {avg_price_stock} ₹
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>
