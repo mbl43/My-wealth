@@ -6,15 +6,16 @@ import {
   DialogBody,
   DialogHeader,
 } from "@material-tailwind/react";
-import { X } from "lucide-react";
+import { CirclePlus, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase/firebase";
 import { collection, addDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const auth = getAuth();
 
-const Modal = ({ investmentCount, onSuccess }) => {
+const Nominee = ({ onSuccess }) => {
   const [open, setOpen] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({
     loading: false,
@@ -50,25 +51,23 @@ const Modal = ({ investmentCount, onSuccess }) => {
       // Convert numeric fields
       const investmentData = {
         ...data,
-        mutual_fund: Number(data.mutual_fund || 0),
-        fd_value: Number(data.fd_value || 0),
-        ppf_value: Number(data.ppf_value || 0),
-        stocks_value: Number(data.stocks_value || 0),
-        timestamp: new Date(),
+        Name_of_Nominee: data.Name_of_Nominee,
+        Nominee_Email: data.Nominee_Email,
       };
 
       console.log("Submitting investment data:", investmentData);
 
       // Reference: /investments/{userId}/{investmentId}
+    //   /investments/aosvvfh2z5b2XOagdH5rRU1Js5E2/Nominee_details
       const userInvestmentsRef = collection(
         db,
         "investments",
         user.uid,
-        "details"
+        "Nominee_details"
       );
       await addDoc(userInvestmentsRef, investmentData);
 
-      console.log("Investment details added successfully!");
+      toast.success("Investment details added successfully!");
       setSubmitStatus({ loading: false, success: true, error: null });
 
       if (typeof onSuccess === "function") {
@@ -95,9 +94,9 @@ const Modal = ({ investmentCount, onSuccess }) => {
       <Button
         onClick={handleOpen}
         variant="filled"
-        className="bg-blue-500 capitalize text-sm"
+        className=" float-right m-0 p-2 bg-blue-500"
       >
-        Add Investment Details
+        <CirclePlus />
       </Button>
 
       <Dialog
@@ -112,7 +111,7 @@ const Modal = ({ investmentCount, onSuccess }) => {
             color="blue-gray"
             className="capitalize mx-5"
           >
-            Add Investment Details
+            Add Nominee Details
           </Typography>
           <Typography className="mt-1 font-normal text-gray-600">
             Keep your records up-to-date and organized.
@@ -138,50 +137,50 @@ const Modal = ({ investmentCount, onSuccess }) => {
                   {submitStatus.error}
                 </div>
               )}
-              {/* Date of Investment */}
+
+              {/* Name Of Nominee */}
               <div>
                 <label className="block text-gray-700 text-left">
-                  Date Of Investment
+                  Name Of Nominee
                 </label>
                 <input
-                  type="date"
-                  {...register("date", { required: "Date is required" })}
+                  type="text"
+                  placeholder="Name Of Nominee"
+                  {...register("Name_of_Nominee", {
+                    required: "Name is required",
+                  })}
                   className="w-full px-4 py-2 border-2 border-black rounded-lg"
                 />
-                {errors.date && (
+                {errors.name && (
                   <p className="text-red-500 text-left">
-                    {errors.date.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
 
-              {/* Investment Fields */}
-              {["mutual_fund", "fd_value", "ppf_value", "stocks_value"].map(
-                (field) => (
-                  <div key={field}>
-                    <label className="block text-gray-700 text-left capitalize">
-                      Monthly Investment in {field.replace("_", " ")}
-                    </label>
-                    <input
-                      type="number"
-                      placeholder={`Enter amount for ${field.replace(
-                        "_",
-                        " "
-                      )}`}
-                      {...register(field, {
-                        required: "Value is required",
-                        min: { value: 0, message: "Value cannot be negative" },
-                      })}
-                      className="w-full px-4 py-2 border-2 border-black rounded-lg"
-                    />
-                    {errors[field] && (
-                      <p className="text-red-500 text-left">
-                        {errors[field].message}
-                      </p>
-                    )}
-                  </div>
-                )
-              )}
+              {/* Email */}
+              <div>
+                <label className="block text-gray-700 text-left">
+                  Email for Alerts (Sent to Nominee)
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter nominee's email"
+                  {...register("Nominee_Email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  className="w-full px-4 py-2 border-2 border-black rounded-lg"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-left">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
 
               {/* Submit Button */}
               <div className="pt-4">
@@ -205,4 +204,4 @@ const Modal = ({ investmentCount, onSuccess }) => {
   );
 };
 
-export default Modal;
+export default Nominee;
