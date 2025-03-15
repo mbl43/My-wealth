@@ -4,12 +4,14 @@ import { useEffect, useState, useCallback } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import Loader from "../Loader/Loader";
+import { CirclePlus } from "lucide-react";
+import Nominee from "../Modal/Nominee";
 const Dashboard = () => {
   const { user } = useUser();
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [investments, setInvestments] = useState([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("Add Nominee Name");
+  const [email, setEmail] = useState("Add Nominee Email ID");
   const [investmentCount, setInvestmentCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,6 +30,7 @@ const Dashboard = () => {
     try {
       let totalAmount = 0;
       let count = 0;
+      // investment details
       const detailsCollectionRef = collection(
         db,
         "investments",
@@ -40,6 +43,21 @@ const Dashboard = () => {
         orderBy("timestamp", "desc")
       );
       const detailsSnapshot = await getDocs(detailsQuery);
+      // Nominee details
+      const nomineedtailsCollectionRef = collection(
+        db,
+        "investments",
+        user.uid,
+        "Nominee_details"
+      );
+      const nomineedetailsQuery = query(nomineedtailsCollectionRef);
+      const NomineeSnapshot = await getDocs(nomineedetailsQuery);
+
+      NomineeSnapshot.forEach((doc) => {
+        const Nomineedata = doc.data();
+        setName(Nomineedata.Name_of_Nominee || "");
+        setEmail(Nomineedata.Nominee_Email || "");
+      });
 
       const investmentData = [];
       let initialInvestment = null;
@@ -52,6 +70,7 @@ const Dashboard = () => {
         const mutualFundValue = parseFloat(data.mutual_fund) || 0;
         const ppfValue = parseFloat(data.ppf_value) || 0;
         const fdValue = parseFloat(data.fd_value) || 0;
+        // Nominee details
 
         const investmentValue =
           stocksValue + mutualFundValue + ppfValue + fdValue;
@@ -82,11 +101,6 @@ const Dashboard = () => {
       setInvestments(investmentData);
       setTotalInvestment(totalAmount);
       setInvestmentCount(count);
-
-      if (initialInvestment) {
-        setName(initialInvestment.name || "");
-        setEmail(initialInvestment.email || "");
-      }
 
       console.log("Total Investment:", totalAmount, "Total Count:", count);
     } catch (err) {
@@ -124,7 +138,7 @@ const Dashboard = () => {
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader/>
+              <Loader />
             </div>
           ) : error ? (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -142,15 +156,16 @@ const Dashboard = () => {
                   </p>
                 </div>
 
-                {name && email && (
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <h2 className="text-lg font-semibold mb-2">
-                      Nominee Information
-                    </h2>
-                    <p className="text-blue-500 font-bold text-lg">{name}</p>
-                    <p className="text-gray-500 text-sm">{email}</p>
-                  </div>
-                )}
+                {/* {name && email && ( */}
+                <div className="bg-white rounded-lg shadow p-4">
+                  <Nominee />
+                  <h2 className="text-lg font-semibold mb-2">
+                    Nominee Information
+                  </h2>
+                  <p className="text-blue-500 font-bold text-lg">{name}</p>
+                  <p className="text-gray-500 text-sm">{email}</p>
+                </div>
+                {/* )} */}
 
                 <div className="bg-white rounded-lg shadow p-4">
                   <h2 className="text-lg font-semibold mb-2">
