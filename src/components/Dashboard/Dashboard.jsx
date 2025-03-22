@@ -4,8 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import Loader from "../Loader/Loader";
-import { CirclePlus } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
+import { doc, deleteDoc } from "firebase/firestore";
 import Nominee from "../Modal/Nominee";
+import { toast } from "react-toastify";
 const Dashboard = () => {
   const { user } = useUser();
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -50,6 +52,7 @@ const Dashboard = () => {
         user.uid,
         "Nominee_details"
       );
+
       const nomineedetailsQuery = query(nomineedtailsCollectionRef);
       const NomineeSnapshot = await getDocs(nomineedetailsQuery);
 
@@ -99,6 +102,8 @@ const Dashboard = () => {
       });
 
       setInvestments(investmentData);
+      console.log(investmentData);
+
       setTotalInvestment(totalAmount);
       setInvestmentCount(count);
 
@@ -111,10 +116,32 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  // Delete Button
+  const deleteInvestmentDetail = async (detailId) => {
+    try {
+      const parentId = user?.uid;
+      const docRef = doc(db, `investments/${parentId}/details/${detailId}`);
+      await deleteDoc(docRef);
+      fetchInvestments();
+      console.log("Document deleted successfully!");
+      toast.success("Investment detail deleted successfully!");
+    } catch (error) {
+      toast.error("Error deleting document:", error);
+    }
+  };
+
+  // Edit Button
+  // const editInvestmentDetail = async () => {
+  //   try {
+
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
     fetchInvestments();
   }, [fetchInvestments]);
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar user={user} />
@@ -192,12 +219,25 @@ const Dashboard = () => {
                       key={inv.id}
                       className="bg-white rounded-lg shadow p-4 hover:shadow-lg transition-shadow"
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-medium text-blue-600">
-                          {inv.formattedDate}
-                        </h3>
-                        <div className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">
-                          ₹{inv.totalValue.toLocaleString()}
+                      <div className="flex justify-between mb-2 space-x-3">
+                        <div className="flex gap-4">
+                          <h3 className="font-medium text-blue-600 m-auto">
+                            {inv.formattedDate}
+                          </h3>
+                          <div className="bg-green-100 text-green-800 text-xs font-medium  rounded m-auto p-2">
+                            ₹{inv.totalValue.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => deleteInvestmentDetail(inv.id)}
+                            className="bg-red-200 cursor-pointer rounded-lg p-1 m-auto"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                          <button className="bg-green-200 cursor-pointer rounded-lg p-1 m-auto">
+                            <Pencil size={18} />
+                          </button>
                         </div>
                       </div>
 
