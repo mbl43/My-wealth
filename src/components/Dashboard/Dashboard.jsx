@@ -82,22 +82,27 @@ const Dashboard = () => {
         const GoldValue = parseFloat(data.Gold) || 0;
         const SilverValue = parseFloat(data.Silver) || 0;
         // Nominee details
-        
+
         const investmentValue =
-          stocksValue + mutualFundValue + ppfValue + fdValue + GoldValue+ SilverValue  ;
-          
-          let formattedDate = data.date;
+          stocksValue +
+          mutualFundValue +
+          ppfValue +
+          fdValue +
+          GoldValue +
+          SilverValue;
+
+        let formattedDate = data.date;
         if (data.date) {
           formattedDate = data.date;
         }
-        
+
         totalAmount += investmentValue;
         count++;
-        
+
         if (!initialInvestment && data.name && data.email) {
           initialInvestment = data;
         }
-        
+
         investmentData.push({
           id: doc.id,
           ...data,
@@ -109,7 +114,7 @@ const Dashboard = () => {
       setInvestments(investmentData);
       setTotalInvestment(totalAmount);
       setInvestmentCount(count);
-      
+
       console.log("Total Investment:", totalAmount, "Total Count:", count);
     } catch (err) {
       console.error("Error fetching investments:", err.message);
@@ -121,18 +126,20 @@ const Dashboard = () => {
 
   // Delete Button
   const deleteInvestmentDetail = async (detailId) => {
-    try {
-      const parentId = user?.uid;
-      const docRef = doc(db, `investments/${parentId}/details/${detailId}`);
-      await deleteDoc(docRef);
-      fetchInvestments();
-      console.log("Document deleted successfully!");
-      toast.success("Investment detail deleted successfully!");
-    } catch (error) {
-      toast.error("Error deleting document:", error);
+    if (confirm("Press OK to delete record !!")) {
+      try {
+        const parentId = user?.uid;
+        const docRef = doc(db, `investments/${parentId}/details/${detailId}`);
+        await deleteDoc(docRef);
+        fetchInvestments();
+        console.log("Document deleted successfully!");
+        toast.success("Investment detail deleted successfully!");
+      } catch (error) {
+        toast.error("Error deleting document:", error);
+      }
     }
   };
-  
+
   // Edit Button
   const editInvestmentDetail = async (editId) => {
     try {
@@ -145,8 +152,8 @@ const Dashboard = () => {
       console.log(error);
     }
   };
-  
-  console.log(name,email);
+
+  console.log(name, email);
   useEffect(() => {
     fetchInvestments();
   }, [fetchInvestments]);
