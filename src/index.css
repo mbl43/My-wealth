@@ -4,6 +4,7 @@
 .bg-black{
  background: transparent;   
  backdrop-filter: blur(3px);
+ margin:auto ;
 }
 .not-blur{
  backdrop-filter: none;
