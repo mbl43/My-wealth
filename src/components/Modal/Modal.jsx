@@ -134,7 +134,7 @@ const Modal = ({ investmentCount, onSuccess }) => {
               className="space-y-2 max-w-md mx-auto bg-white"
             >
               {submitStatus.error && (
-                <div className="mb-4 p-2 bg-red-100 text-red-700 rounded border border-red-300">
+                <div className="mb-2 p-2 bg-red-100 text-red-700 rounded border border-red-300">
                   {submitStatus.error}
                 </div>
               )}
@@ -156,7 +156,7 @@ const Modal = ({ investmentCount, onSuccess }) => {
               </div>
 
               {/* Investment Fields */}
-              {["mutual_fund", "fd_value", "ppf_value", "stocks_value"].map(
+              {["mutual_fund", "fd_value", "ppf_value", "stocks_value","Gold","Silver"].map(
                 (field) => (
                   <div key={field}>
                     <label className="block text-gray-700 text-left capitalize">
