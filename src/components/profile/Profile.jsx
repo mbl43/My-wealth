@@ -19,17 +19,17 @@ const Profile = () => {
       <div className="flex flex-1">
         <Sidebar />
         {user && (
-          <div className="max-w-screen-xl mx-auto">
+          <div className="max-w-screen-xl mx-auto bg-gray-100 m-auto rounded-2xl p-6  ">
             <div className="p-4 flex justify-center items-center flex-wrap flex-col text-center">
               <div className="rounded-full w-[200px] border-2 border-blue-500 ">
                 <img src={male} className="rounded-full" alt="profile image" />
               </div>
               <h3 className="text-xl font-semibold text-gray-700 mt-7">
-                Email: {user.email}
+                <span className="text-gray-500">Email:</span> {user.email}
               </h3>
               <div>
                 <h3 className="text-xl font-semibold text-gray-700 mt-7">
-                  Name: {user.displayName}
+                  <span className="text-gray-500">Name:</span> {user.displayName}
                 </h3>
               </div>
             </div>
