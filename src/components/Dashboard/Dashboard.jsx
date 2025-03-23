@@ -2,7 +2,13 @@ import { Sidebar, Navbar, Modal, Dialog } from "../index";
 import { useUser } from "../../contextAPI";
 import { useEffect, useState, useCallback } from "react";
 import { db } from "../../firebase/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  updateDoc,
+} from "firebase/firestore";
 import Loader from "../Loader/Loader";
 import { Pencil, Trash2 } from "lucide-react";
 import { doc, deleteDoc } from "firebase/firestore";
@@ -73,26 +79,25 @@ const Dashboard = () => {
         const mutualFundValue = parseFloat(data.mutual_fund) || 0;
         const ppfValue = parseFloat(data.ppf_value) || 0;
         const fdValue = parseFloat(data.fd_value) || 0;
+        const GoldValue = parseFloat(data.Gold) || 0;
+        const SilverValue = parseFloat(data.Silver) || 0;
         // Nominee details
-
+        
         const investmentValue =
-          stocksValue + mutualFundValue + ppfValue + fdValue;
-
-        // Formatting date from timestamp
-        let formattedDate = "No date available";
-        if (data.timestamp?.toDate) {
-          formattedDate = data.timestamp.toDate().toLocaleDateString("en-IN");
-        } else if (data.date) {
+          stocksValue + mutualFundValue + ppfValue + fdValue + GoldValue+ SilverValue  ;
+          
+          let formattedDate = data.date;
+        if (data.date) {
           formattedDate = data.date;
         }
-
+        
         totalAmount += investmentValue;
         count++;
-
+        
         if (!initialInvestment && data.name && data.email) {
           initialInvestment = data;
         }
-
+        
         investmentData.push({
           id: doc.id,
           ...data,
@@ -102,11 +107,9 @@ const Dashboard = () => {
       });
 
       setInvestments(investmentData);
-      console.log(investmentData);
-
       setTotalInvestment(totalAmount);
       setInvestmentCount(count);
-
+      
       console.log("Total Investment:", totalAmount, "Total Count:", count);
     } catch (err) {
       console.error("Error fetching investments:", err.message);
@@ -129,16 +132,21 @@ const Dashboard = () => {
       toast.error("Error deleting document:", error);
     }
   };
-
+  
   // Edit Button
-  // const editInvestmentDetail = async () => {
-  //   try {
-
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  const editInvestmentDetail = async (editId) => {
+    try {
+      const parentId = user?.uid;
+      const docRef = doc(db, `investments/${parentId}/details/${editId}`);
+      await updateDoc(docRef, updatedData);
+      toast.success("Investment detail updated successfully!");
+      console.log("Investment detail updated successfully!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  console.log(name,email);
   useEffect(() => {
     fetchInvestments();
   }, [fetchInvestments]);
@@ -221,10 +229,10 @@ const Dashboard = () => {
                     >
                       <div className="flex justify-between mb-2 space-x-3">
                         <div className="flex gap-4">
-                          <h3 className="font-medium text-blue-600 m-auto">
+                          <h3 className="text-xs sm:text-xl font-medium text-blue-600 m-auto">
                             {inv.formattedDate}
                           </h3>
-                          <div className="bg-green-100 text-green-800 text-xs font-medium  rounded m-auto p-2">
+                          <div className="bg-green-100 text-green-800 text-xs font-medium rounded-md m-auto p-2">
                             ₹{inv.totalValue.toLocaleString()}
                           </div>
                         </div>
@@ -235,7 +243,10 @@ const Dashboard = () => {
                           >
                             <Trash2 size={18} />
                           </button>
-                          <button className="bg-green-200 cursor-pointer rounded-lg p-1 m-auto">
+                          <button
+                            onClick={() => editInvestmentDetail(inv.id)}
+                            className="bg-green-200 cursor-pointer rounded-lg p-1 m-auto"
+                          >
                             <Pencil size={18} />
                           </button>
                         </div>
@@ -252,6 +263,12 @@ const Dashboard = () => {
                         )}
                         {inv.ppf_value > 0 && (
                           <p>PPF: ₹{inv.ppf_value.toLocaleString()}</p>
+                        )}
+                        {inv.Gold > 0 && (
+                          <p>Gold: ₹{inv.Gold.toLocaleString()}</p>
+                        )}
+                        {inv.Silver > 0 && (
+                          <p>Silver: ₹{inv.Silver.toLocaleString()}</p>
                         )}
                         {inv.fd_value > 0 && (
                           <p>
