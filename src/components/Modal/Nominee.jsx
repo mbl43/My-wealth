@@ -67,9 +67,9 @@ const Nominee = ({ onSuccess }) => {
       );
       await addDoc(userInvestmentsRef, investmentData);
 
-      toast.success("Investment details added successfully!");
+      toast.success("Nominee details added successfully!");
       setSubmitStatus({ loading: false, success: true, error: null });
-
+     
       if (typeof onSuccess === "function") {
         onSuccess();
       }
@@ -103,7 +103,7 @@ const Nominee = ({ onSuccess }) => {
         size="lg"
         open={open}
         handler={handleOpen}
-        className="p-2 max-w-[550px] text-center mx-auto"
+        className="p-2 max-w-[550px] text-center"
       >
         <DialogHeader className="relative m-0 block">
           <Typography
@@ -125,7 +125,7 @@ const Nominee = ({ onSuccess }) => {
         <DialogBody className="pb-3">
           {submitStatus.success ? (
             <div className="text-green-500 font-medium text-center py-4">
-              Investment details added successfully!
+              Nominee details added successfully!
             </div>
           ) : (
             <form
