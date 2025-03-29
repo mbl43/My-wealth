@@ -9,7 +9,7 @@ import {
 import { CirclePlus, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase/firebase";
-import { collection, addDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
 
@@ -53,6 +53,7 @@ const Nominee = ({ onSuccess }) => {
         ...data,
         Name_of_Nominee: data.Name_of_Nominee,
         Nominee_Email: data.Nominee_Email,
+        updated_at: serverTimestamp()
       };
 
       console.log("Submitting investment data:", investmentData);
