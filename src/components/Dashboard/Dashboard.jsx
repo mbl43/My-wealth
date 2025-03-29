@@ -2,6 +2,7 @@ import { Sidebar, Navbar, Modal, Dialog } from "../index";
 import { useUser } from "../../contextAPI";
 import { useEffect, useState, useCallback } from "react";
 import { db } from "../../firebase/firebase";
+import emailjs from "@emailjs/browser";
 import {
   collection,
   getDocs,
@@ -14,6 +15,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { doc, deleteDoc } from "firebase/firestore";
 import Nominee from "../Modal/Nominee";
 import { toast } from "react-toastify";
+import { Button } from "@material-tailwind/react";
 const Dashboard = () => {
   const { user } = useUser();
   const [totalInvestment, setTotalInvestment] = useState(0);
@@ -90,7 +92,6 @@ const Dashboard = () => {
           fdValue +
           GoldValue +
           SilverValue;
-
         let formattedDate = data.date;
         if (data.date) {
           formattedDate = data.date;
@@ -153,7 +154,52 @@ const Dashboard = () => {
     }
   };
 
-  console.log(name, email);
+  // Notification
+  const sendNotification = async (email, name) => {
+    if (!email || !name) {
+      toast.error("Something is missing");
+      console.table("email", email);
+    }
+    const Totalinvestments = investments.reduce(
+      (sum, inv) => ({
+        Gold: Number(sum.Gold) + Number(inv.Gold || 0),
+        Silver: Number(sum.Silver) + Number(inv.Silver || 0),
+        ppf_value: Number(sum.ppf_value) + Number(inv.ppf_value || 0),
+        fd_value: Number(sum.fd_value) + Number(inv.fd_value || 0),
+        mutual_fund: Number(sum.mutual_fund) + Number(inv.mutual_fund || 0),
+        stocks_value: Number(sum.stocks_value) + Number(inv.stocks_value || 0),
+      }),
+      { Gold: 0, Silver: 0, ppf_value: 0,fd_value:0,mutual_fund:0,stocks_value:0 }
+    );
+    const templateParams = {
+      nominator_name:user?.displayName,
+      user_name: name,
+      user_email: email,
+      totalInvestment: totalInvestment.toLocaleString('en-IN'),
+      gold: Totalinvestments.Gold.toLocaleString('en-IN'),
+      silver: Totalinvestments.Silver.toLocaleString('en-IN'),
+      ppf: Totalinvestments.ppf_value.toLocaleString('en-IN'),
+      fd: Totalinvestments.fd_value.toLocaleString('en-IN'),
+      mutual_fund: Totalinvestments.mutual_fund.toLocaleString('en-IN'),
+      stocks_value: Totalinvestments.stocks_value.toLocaleString('en-IN'),
+      transaction_date: new Date().toLocaleDateString("en-IN"),
+    };
+
+    try {
+      console.table(templateParams);
+      await emailjs.send(
+        "service_k34f7tp", // Service ID
+        "template_sbl04nb", // Template ID
+        templateParams,
+        "DEVywm1c0-ncWm9fi" // Public Key
+      );
+      toast.success("Your Latest Investment Summary sent to Nominee!!");
+      console.log("++", email);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchInvestments();
   }, [fetchInvestments]);
@@ -172,10 +218,20 @@ const Dashboard = () => {
                 {user?.displayName || "User"}
               </span>
             </h1>
-            <Modal
-              investmentCount={investmentCount}
-              onSuccess={fetchInvestments}
-            />
+            <div>
+              <Button
+                onClick={() => sendNotification(email, name)}
+                variant="gradient"
+                className="bg-blue-700 capitalize sm:text-sm p-2 m-2"
+              >
+                Send mail to nominee
+              </Button>
+
+              <Modal
+                investmentCount={investmentCount}
+                onSuccess={fetchInvestments}
+              />
+            </div>
           </div>
 
           {loading ? (
