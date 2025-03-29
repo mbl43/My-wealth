@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
 import Switch from "../Darkmode/Switch";
 
-const Navbar = ({user}) => {
+const Navbar = ({ user }) => {
   const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
   const toggleMenu = () => setIsMobile(!isMobile);
   const [theme, setTheme] = useState("light");
@@ -49,20 +49,6 @@ const Navbar = ({user}) => {
               </Link>
             </h1>
           </div>
-          {/* Hamburger Icon for Mobile */}
-          <div className="md:hidden flex items-center space-x-5">
-            {!user && (
-              <Link
-                to="/auth"
-                className="flex gap-x-1.5 justify-center items-center text-white"
-              >
-                <RiAccountCircleFill size={30} /> SignUp{" "}
-              </Link>
-            )}
-            <button onClick={toggleMenu} className="text-white text-3xl">
-              {isMobile ? <IoCloseSharp /> : <RxHamburgerMenu />}
-            </button>
-          </div>
 
           {/* Navigation Links */}
           <ul
@@ -88,32 +74,39 @@ const Navbar = ({user}) => {
               </li>
             ))}
           </ul>
-          <div className="flex items-center justify-center t-0 relative -top-3">
-            <button onClick={toggleTheme}>
-              <Switch />
-            </button>
-          </div>
-          {/* Logout Button (Visible only when logged in) */}
-          {user && (
-            <div className="flex items-center justify-center space-x-5">
-              {/* notification */}
-              <Link to="/notification">
-                <Badge color="success" badgeContent={0}>
-                  <IoIosNotifications
-                    size={35}
-                    className="text-white"
-                    color="action"
-                  />
-                </Badge>
-              </Link>
-              {/* logout */}
-
-              <button onClick={handleLogout}>
-                <IoLogOutOutline size={35} className="text-white" />
+          <div className="flex space-x-4">
+            <div className="flex items-center justify-center t-0 relative -top-3">
+              <button onClick={toggleTheme}>
+                <Switch />
               </button>
             </div>
-          )}
+           
+            {/* Logout Button (Visible only when logged in) */}
+            {user && (
+              <div className="flex items-center justify-center space-x-5">
+                {/* logout */}
 
+                <button onClick={handleLogout}>
+                  <IoLogOutOutline size={35} className="text-white" />
+                </button>
+              </div>
+            )}
+           
+            {/* Hamburger Icon for Mobile */}
+            <div className="md:hidden flex items-center space-x-5">
+              {!user && (
+                <Link
+                  to="/auth"
+                  className="flex gap-x-1.5 justify-center items-center text-white"
+                >
+                  <RiAccountCircleFill size={30} /> SignUp{" "}
+                </Link>
+              )}
+              <button onClick={toggleMenu} className="text-white text-3xl">
+                {isMobile ? <IoCloseSharp /> : <RxHamburgerMenu />}
+              </button>
+            </div>
+          </div>
           {/* Authentication Buttons (Visible only when not logged in) */}
           {!user && (
             <div className="hidden md:flex items-center space-x-4">
