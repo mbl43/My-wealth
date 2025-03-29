@@ -95,7 +95,7 @@ const Modal = ({ investmentCount, onSuccess }) => {
       <Button
         onClick={handleOpen}
         variant="filled"
-        className="bg-blue-500 capitalize text-sm"
+        className="bg-blue-600 capitalize sm:text-sm p-2"
       >
         Add Investment Details
       </Button>
