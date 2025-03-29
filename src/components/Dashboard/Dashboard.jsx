@@ -9,6 +9,7 @@ import {
   query,
   orderBy,
   updateDoc,
+  limit,
 } from "firebase/firestore";
 import Loader from "../Loader/Loader";
 import { Pencil, Trash2 } from "lucide-react";
@@ -61,7 +62,12 @@ const Dashboard = () => {
         "Nominee_details"
       );
 
-      const nomineedetailsQuery = query(nomineedtailsCollectionRef);
+    
+      const nomineedetailsQuery = query(
+        nomineedtailsCollectionRef,
+        orderBy("updated_at", "desc"), 
+        limit(1) 
+      );
       const NomineeSnapshot = await getDocs(nomineedetailsQuery);
 
       NomineeSnapshot.forEach((doc) => {
@@ -169,19 +175,26 @@ const Dashboard = () => {
         mutual_fund: Number(sum.mutual_fund) + Number(inv.mutual_fund || 0),
         stocks_value: Number(sum.stocks_value) + Number(inv.stocks_value || 0),
       }),
-      { Gold: 0, Silver: 0, ppf_value: 0,fd_value:0,mutual_fund:0,stocks_value:0 }
+      {
+        Gold: 0,
+        Silver: 0,
+        ppf_value: 0,
+        fd_value: 0,
+        mutual_fund: 0,
+        stocks_value: 0,
+      }
     );
     const templateParams = {
-      nominator_name:user?.displayName,
+      nominator_name: user?.displayName,
       user_name: name,
       user_email: email,
-      totalInvestment: totalInvestment.toLocaleString('en-IN'),
-      gold: Totalinvestments.Gold.toLocaleString('en-IN'),
-      silver: Totalinvestments.Silver.toLocaleString('en-IN'),
-      ppf: Totalinvestments.ppf_value.toLocaleString('en-IN'),
-      fd: Totalinvestments.fd_value.toLocaleString('en-IN'),
-      mutual_fund: Totalinvestments.mutual_fund.toLocaleString('en-IN'),
-      stocks_value: Totalinvestments.stocks_value.toLocaleString('en-IN'),
+      totalInvestment: totalInvestment.toLocaleString("en-IN"),
+      gold: Totalinvestments.Gold.toLocaleString("en-IN"),
+      silver: Totalinvestments.Silver.toLocaleString("en-IN"),
+      ppf: Totalinvestments.ppf_value.toLocaleString("en-IN"),
+      fd: Totalinvestments.fd_value.toLocaleString("en-IN"),
+      mutual_fund: Totalinvestments.mutual_fund.toLocaleString("en-IN"),
+      stocks_value: Totalinvestments.stocks_value.toLocaleString("en-IN"),
       transaction_date: new Date().toLocaleDateString("en-IN"),
     };
 
