@@ -216,16 +216,20 @@ const Dashboard = () => {
   
   const sendInvestmentDataToBackend = async (name, email, investments) => {
     try {
+        const payload = { name, email, investments };
+        console.log("Sending payload:", payload); // Log the payload
+
         const response = await fetch(`${API_BASE_URL}/update-investment`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, email, investments }), 
+            body: JSON.stringify(payload), 
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const errorMessage = await response.text(); // Get the response body
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorMessage}`);
         }
 
         const data = await response.json();
@@ -234,6 +238,7 @@ const Dashboard = () => {
         console.error("Error sending data:", error);
     }
 };
+
 
     
   useEffect(() => {
