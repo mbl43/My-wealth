@@ -212,40 +212,40 @@ const Dashboard = () => {
     }
   };
   
-  const API_BASE_URL = "https://my-wealth-backend-production.up.railway.app";
+//   const API_BASE_URL = "https://my-wealth-backend-production.up.railway.app";
   
-  const sendInvestmentDataToBackend = async (name, email, investments) => {
-    try {
-        const payload = { name, email, investments };
-        console.log("Sending payload:", payload); // Log the payload
+//   const sendInvestmentDataToBackend = async (name, email, investments) => {
+//     try {
+//         const payload = { name, email, investments };
+//         console.log("Sending payload:", payload); // Log the payload
 
-        const response = await fetch(`${API_BASE_URL}/update-investment`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload), 
-        });
+//         const response = await fetch(`${API_BASE_URL}/update-investment`, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify(payload), 
+//         });
 
-        if (!response.ok) {
-            const errorMessage = await response.text(); // Get the response body
-            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorMessage}`);
-        }
+//         if (!response.ok) {
+//             const errorMessage = await response.text(); // Get the response body
+//             throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorMessage}`);
+//         }
 
-        const data = await response.json();
-        console.log("Success:", data);
-    } catch (error) {
-        console.error("Error sending data:", error);
-    }
-};
+//         const data = await response.json();
+//         console.log("Success:", data);
+//     } catch (error) {
+//         console.error("Error sending data:", error);
+//     }
+// };
 
 
     
-  useEffect(() => {
-    if (investments && name && email) {
-      sendInvestmentDataToBackend(name, email, investments);
-    }
-  }, [investments, name, email]);
+//   useEffect(() => {
+//     if (investments && name && email) {
+//       sendInvestmentDataToBackend(name, email, investments);
+//     }
+//   }, [investments, name, email]);
 
   useEffect(() => {
     fetchInvestments();
