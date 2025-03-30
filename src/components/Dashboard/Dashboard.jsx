@@ -62,11 +62,10 @@ const Dashboard = () => {
         "Nominee_details"
       );
 
-    
       const nomineedetailsQuery = query(
         nomineedtailsCollectionRef,
-        orderBy("updated_at", "desc"), 
-        limit(1) 
+        orderBy("updated_at", "desc"),
+        limit(1)
       );
       const NomineeSnapshot = await getDocs(nomineedetailsQuery);
 
@@ -163,7 +162,7 @@ const Dashboard = () => {
   // Notification
   const sendNotification = async (email, name) => {
     if (!email || !name) {
-      toast.error("Something is missing");
+      toast.error("Add Email and Name of Nominee!!");
       console.table("email", email);
     }
     const Totalinvestments = investments.reduce(
@@ -212,6 +211,36 @@ const Dashboard = () => {
       toast.error(error);
     }
   };
+  
+  const API_BASE_URL = "https://my-wealth-backend-production.up.railway.app";
+  
+  const sendInvestmentDataToBackend = async (name, email, investments) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/update-investment`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email, investments }), 
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Success:", data);
+    } catch (error) {
+        console.error("Error sending data:", error);
+    }
+};
+
+    
+  useEffect(() => {
+    if (investments && name && email) {
+      sendInvestmentDataToBackend(name, email, investments);
+    }
+  }, [investments, name, email]);
 
   useEffect(() => {
     fetchInvestments();
@@ -233,6 +262,7 @@ const Dashboard = () => {
             </h1>
             <div>
               <Button
+                id="sendemail"
                 onClick={() => sendNotification(email, name)}
                 variant="gradient"
                 className="bg-blue-700 capitalize sm:text-sm p-2 m-2"
@@ -241,6 +271,7 @@ const Dashboard = () => {
               </Button>
 
               <Modal
+                id="Addinvest"
                 investmentCount={investmentCount}
                 onSuccess={fetchInvestments}
               />
