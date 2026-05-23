@@ -5,7 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../index";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { HiOutlineMail, HiOutlineLockClosed, HiEye, HiEyeOff } from "react-icons/hi";
+import {
+  HiOutlineMail,
+  HiOutlineLockClosed,
+  HiEye,
+  HiEyeOff,
+} from "react-icons/hi";
 
 import { useUser } from "../../contextAPI";
 import { useEffect } from "react";
@@ -31,7 +36,7 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const loggedUser = userCredential.user;
       updateUser({
@@ -66,7 +71,6 @@ const Login = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              
               <h2 className="text-3xl font-bold text-white leading-tight">
                 Welcome back to your{" "}
                 <span className="text-gradient">wealth dashboard</span>
@@ -83,8 +87,18 @@ const Login = () => {
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="w-3 h-3 text-emerald-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </div>
                     <span className="text-sm text-surface-300">{item}</span>
@@ -104,14 +118,6 @@ const Login = () => {
             className="w-full max-w-sm"
           >
             <div className="text-center mb-8">
-              <div className="lg:hidden flex items-center justify-center gap-2 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">W</span>
-                </div>
-                <span className="text-xl font-bold text-white">
-                  My <span className="text-gradient">Wealth</span>
-                </span>
-              </div>
               <h1 className="text-2xl font-bold text-white">Sign in</h1>
               <p className="mt-2 text-sm text-surface-400">
                 Access your wealth dashboard
@@ -159,7 +165,11 @@ const Login = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-300 transition-colors"
                   >
-                    {showPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <HiEyeOff className="w-5 h-5" />
+                    ) : (
+                      <HiEye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -176,7 +186,7 @@ const Login = () => {
                   "Sign in"
                 )}
               </button>
-            </form>      
+            </form>
 
             <p className="mt-8 text-center text-sm text-surface-400">
               Don't have an account?{" "}

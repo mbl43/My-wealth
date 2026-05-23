@@ -108,8 +108,7 @@ const SignUp = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-            
-              <h2 className="text-3xl font-bold text-white leading-tight">
+                          <h2 className="text-3xl font-bold text-white leading-tight">
                 Start protecting your{" "}
                 <span className="text-gradient">family's wealth</span> today
               </h2>
@@ -143,15 +142,7 @@ const SignUp = () => {
             className="w-full max-w-sm"
           >
             <div className="text-center mb-8">
-              <div className="lg:hidden flex items-center justify-center gap-2 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">W</span>
-                </div>
-                <span className="text-xl font-bold text-white">
-                  My <span className="text-gradient">Wealth</span>
-                </span>
-              </div>
-              <h1 className="text-2xl font-bold text-white">Create account</h1>
+                            <h1 className="text-2xl font-bold text-white">Create account</h1>
               <p className="mt-2 text-sm text-surface-400">
                 Free forever. No credit card required.
               </p>

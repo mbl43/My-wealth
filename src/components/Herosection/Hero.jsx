@@ -211,7 +211,7 @@ const Hero = () => {
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         {/* Background effects */}
         <div 
-          className="absolute inset-0 z-10 opacity-60 bg-contain bg-no-repeat" 
+          className="absolute inset-0 z-10 opacity-60 bg-contain bg-no-repeat max-md:hidden" 
           style={{ backgroundImage: `url(${bgImage})` }} 
         />
         
