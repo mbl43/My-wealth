@@ -9,9 +9,10 @@ import {
 import { CirclePlus, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase/firebase";
-import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const auth = getAuth();
 
@@ -48,7 +49,6 @@ const Nominee = ({ onSuccess }) => {
         throw new Error("User not authenticated");
       }
 
-      // Convert numeric fields
       const investmentData = {
         ...data,
         Name_of_Nominee: data.Name_of_Nominee,
@@ -58,8 +58,6 @@ const Nominee = ({ onSuccess }) => {
 
       console.log("Submitting investment data:", investmentData);
 
-      // Reference: /investments/{userId}/{investmentId}
-    //   /investments/aosvvfh2z5b2XOagdH5rRU1Js5E2/Nominee_details
       const userInvestmentsRef = collection(
         db,
         "investments",
@@ -92,81 +90,93 @@ const Nominee = ({ onSuccess }) => {
 
   return (
     <>
-      <Button
+      <button
         onClick={handleOpen}
-        variant="filled"
-        className=" float-right m-0 p-2 bg-blue-500"
+        className="p-1 rounded-lg text-cyan-400 hover:bg-cyan-500/10 transition-all"
+        title="Add/Update Nominee"
       >
-        <CirclePlus />
-      </Button>
+        <CirclePlus size={18} />
+      </button>
 
       <Dialog
         size="lg"
         open={open}
         handler={handleOpen}
-        className="p-2 max-w-[550px] text-center"
+        className="p-0 w-full mx-auto bg-surface-900 border border-surface-700/50 rounded-2xl shadow-premium"
       >
-        <DialogHeader className="relative m-0 block">
+        <DialogHeader className="relative m-0 block p-6 pb-0">
           <Typography
             variant="h4"
-            color="blue-gray"
-            className="capitalize mx-5"
+            className="text-white text-xl font-semibold"
           >
             Add Nominee Details
           </Typography>
-          <Typography className="mt-1 font-normal text-gray-600">
-            Keep your records up-to-date and organized.
+          <Typography className="mt-1 font-normal text-sm text-surface-400">
+            Your nominee will receive investment summaries via email.
           </Typography>
-          <X
-            className="h-7 w-7 stroke-4 !absolute right-3.5 top-3.5 cursor-pointer"
+          <button
+            className="absolute right-4 top-4 p-2 rounded-lg text-surface-400 hover:text-white hover:bg-white/5 transition-all"
             onClick={handleOpen}
-          />
+          >
+            <X className="h-5 w-5" />
+          </button>
         </DialogHeader>
 
-        <DialogBody className="pb-3">
+        <DialogBody className="p-6 pt-4">
           {submitStatus.success ? (
-            <div className="text-green-500 font-medium text-center py-4">
-              Nominee details added successfully!
-            </div>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-center py-8"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-emerald-400 font-medium">
+                Nominee added successfully!
+              </p>
+            </motion.div>
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-2 max-w-md mx-auto bg-white"
+              className="space-y-4"
             >
               {submitStatus.error && (
-                <div className="mb-4 p-2 bg-red-100 text-red-700 rounded border border-red-300">
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400">
                   {submitStatus.error}
                 </div>
               )}
 
-              {/* Name Of Nominee */}
+              {/* Name */}
               <div>
-                <label className="block text-gray-700 text-left">
-                  Name Of Nominee
+                <label className="block text-sm font-medium text-surface-300 mb-1.5">
+                  Nominee Name
                 </label>
                 <input
                   type="text"
-                  placeholder="Name Of Nominee"
+                  placeholder="Full name of nominee"
                   {...register("Name_of_Nominee", {
                     required: "Name is required",
                   })}
-                  className="w-full px-4 py-2 border-2 border-black rounded-lg"
+                  className="input-field"
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-left">
-                    {errors.name.message}
+                {errors.Name_of_Nominee && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.Name_of_Nominee.message}
                   </p>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-gray-700 text-left">
-                  Email for Alerts (Sent to Nominee)
+                <label className="block text-sm font-medium text-surface-300 mb-1.5">
+                  Nominee Email
                 </label>
                 <input
                   type="email"
-                  placeholder="Enter nominee's email"
+                  placeholder="nominee@email.com"
                   {...register("Nominee_Email", {
                     required: "Email is required",
                     pattern: {
@@ -174,27 +184,27 @@ const Nominee = ({ onSuccess }) => {
                       message: "Invalid email address",
                     },
                   })}
-                  className="w-full px-4 py-2 border-2 border-black rounded-lg"
+                  className="input-field"
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-left">
-                    {errors.email.message}
+                {errors.Nominee_Email && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.Nominee_Email.message}
                   </p>
                 )}
               </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
+              {/* Submit */}
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={submitStatus.loading}
-                  className={`w-full px-4 py-2 rounded-lg text-white font-medium ${
-                    submitStatus.loading
-                      ? "bg-blue-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
+                  className="btn-primary w-full"
                 >
-                  {submitStatus.loading ? "Submitting..." : "Submit"}
+                  {submitStatus.loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    "Save Nominee"
+                  )}
                 </button>
               </div>
             </form>

@@ -47,6 +47,7 @@ export const UserProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
     } catch (err) {
       console.error("Error signing out:", err);
     }
@@ -64,7 +65,9 @@ export const UserProvider = ({ children }) => {
           };
           updateUser(userData);
         } else {
-          setUser(null); // Don't immediately clear localStorage
+          setUser(null);
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
         }
         setLoading(false);
       },

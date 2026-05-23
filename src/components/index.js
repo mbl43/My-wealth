@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar/Sidebar"
 import Profile from "./profile/Profile"
 import Sip from "./Calc/Sip"
 import Dialog from "./Dialog/DialogBox";
-import Modal from "../components/Modal/Modal"
-import StockAvg from "../components/Calc/StockAvg";
-import LossRecovery from "../components/Calc/LossRecovery"
+import Modal from "./Modal/Modal"
+import StockAvg from "./Calc/StockAvg";
+import LossRecovery from "./Calc/LossRecovery"
 export{Footer,Navbar,Hero,Login,SignUp,Dashboard,Sidebar,Profile,Sip,Dialog,Modal,StockAvg,LossRecovery}

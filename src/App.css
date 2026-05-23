@@ -1,10 +1,5 @@
-.font-poppins {
-  font-family: "Poppins", sans-serif;
-}
+/* Global font override — design system uses Inter via Tailwind config */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
-}
-.top-62x {
-  top: 62px;
 }

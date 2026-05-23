@@ -6,11 +6,12 @@ import {
   DialogBody,
   DialogHeader,
 } from "@material-tailwind/react";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { db } from "../../firebase/firebase";
-import { collection, addDoc, doc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { motion } from "framer-motion";
 
 const auth = getAuth();
 
@@ -59,7 +60,6 @@ const Modal = ({ investmentCount, onSuccess }) => {
 
       console.log("Submitting investment data:", investmentData);
 
-      // Reference: /investments/{userId}/{investmentId}
       const userInvestmentsRef = collection(
         db,
         "investments",
@@ -90,111 +90,128 @@ const Modal = ({ investmentCount, onSuccess }) => {
     }
   };
 
+  const investmentFields = [
+    { key: "mutual_fund", label: "Mutual Funds" },
+    { key: "fd_value", label: "Fixed Deposits" },
+    { key: "ppf_value", label: "PPF" },
+    { key: "stocks_value", label: "Stocks" },
+    { key: "Gold", label: "Gold" },
+    { key: "Silver", label: "Silver" },
+  ];
+
   return (
     <>
-      <Button
+      <button
         onClick={handleOpen}
-        variant="filled"
-        className="bg-blue-600 capitalize sm:text-sm p-2"
+        className="btn-primary text-sm !py-2 !px-4"
       >
-        Add Investment Details
-      </Button>
+        <Plus size={16} />
+        Add Investment
+      </button>
 
       <Dialog
         size="lg"
         open={open}
         handler={handleOpen}
-        className="p-2 max-w-[550px] text-center mx-auto"
+        className="p-0 mx-auto bg-surface-900 border border-surface-700/50 rounded-2xl shadow-premium"
       >
-        <DialogHeader className="relative m-0 block">
+        <DialogHeader className="relative m-0 block p-6 pb-0">
           <Typography
             variant="h4"
-            color="blue-gray"
-            className="capitalize mx-5"
+            className="text-white text-xl font-semibold"
           >
             Add Investment Details
           </Typography>
-          <Typography className="mt-1 font-normal text-gray-600">
+          <Typography className="mt-1 font-normal text-sm text-surface-400">
             Keep your records up-to-date and organized.
           </Typography>
-          <X
-            className="h-7 w-7 stroke-4 !absolute right-3.5 top-3.5 cursor-pointer"
+          <button
+            className="absolute right-4 top-4 p-2 rounded-lg text-surface-400 hover:text-white hover:bg-white/5 transition-all"
             onClick={handleOpen}
-          />
+          >
+            <X className="h-5 w-5" />
+          </button>
         </DialogHeader>
 
-        <DialogBody className="pb-3">
+        <DialogBody className="p-6 pt-4">
           {submitStatus.success ? (
-            <div className="text-green-500 font-medium text-center py-4">
-              Investment details added successfully!
-            </div>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-center py-8"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-emerald-400 font-medium">
+                Investment added successfully!
+              </p>
+            </motion.div>
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-2 max-w-md mx-auto bg-white"
+              className="space-y-4"
             >
               {submitStatus.error && (
-                <div className="mb-2 p-2 bg-red-100 text-red-700 rounded border border-red-300">
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400">
                   {submitStatus.error}
                 </div>
               )}
-              {/* Date of Investment */}
+
+              {/* Date */}
               <div>
-                <label className="block text-gray-700 text-left">
-                  Date Of Investment
+                <label className="block text-sm font-medium text-surface-300 mb-1.5">
+                  Date of Investment
                 </label>
                 <input
                   type="date"
                   {...register("date", { required: "Date is required" })}
-                  className="w-full px-4 py-2 border-2 border-black rounded-lg"
+                  className="input-field"
                 />
                 {errors.date && (
-                  <p className="text-red-500 text-left">
-                    {errors.date.message}
-                  </p>
+                  <p className="text-red-400 text-xs mt-1">{errors.date.message}</p>
                 )}
               </div>
 
               {/* Investment Fields */}
-              {["mutual_fund", "fd_value", "ppf_value", "stocks_value","Gold","Silver"].map(
-                (field) => (
-                  <div key={field}>
-                    <label className="block text-gray-700 text-left capitalize">
-                      Monthly Investment in {field.replace("_", " ")}
+              <div className="grid grid-cols-2 gap-3">
+                {investmentFields.map((field) => (
+                  <div key={field.key}>
+                    <label className="block text-sm font-medium text-surface-300 mb-1.5">
+                      {field.label}
                     </label>
                     <input
                       type="number"
-                      placeholder={`Enter amount for ${field.replace(
-                        "_",
-                        " "
-                      )}`}
-                      {...register(field, {
+                      placeholder="₹ 0"
+                      {...register(field.key, {
                         required: "Value is required",
-                        min: { value: 0, message: "Value cannot be negative" },
+                        min: { value: 0, message: "Cannot be negative" },
                       })}
-                      className="w-full px-4 py-2 border-2 border-black rounded-lg"
+                      className="input-field"
                     />
-                    {errors[field] && (
-                      <p className="text-red-500 text-left">
-                        {errors[field].message}
+                    {errors[field.key] && (
+                      <p className="text-red-400 text-xs mt-1">
+                        {errors[field.key].message}
                       </p>
                     )}
                   </div>
-                )
-              )}
+                ))}
+              </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
+              {/* Submit */}
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={submitStatus.loading}
-                  className={`w-full px-4 py-2 rounded-lg text-white font-medium ${
-                    submitStatus.loading
-                      ? "bg-blue-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  }`}
+                  className="btn-primary w-full"
                 >
-                  {submitStatus.loading ? "Submitting..." : "Submit"}
+                  {submitStatus.loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    "Save Investment"
+                  )}
                 </button>
               </div>
             </form>

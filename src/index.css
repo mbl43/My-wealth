@@ -1,11 +1,172 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-.bg-black{
- background: transparent;   
- backdrop-filter: blur(3px);
- margin:auto ;
+
+@layer base {
+  /* ── Smooth scrolling ── */
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Global body defaults ── */
+  body {
+    @apply bg-surface-950 text-surface-100 font-sans;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ── Selection styling ── */
+  ::selection {
+    @apply bg-emerald-500/30 text-white;
+  }
+
+  /* ── Scrollbar styling ── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-600 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surface-500;
+  }
+
+  /* ── Focus ring defaults ── */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-emerald-500;
+  }
 }
-.not-blur{
- backdrop-filter: none;
+
+@layer components {
+  /* ── Glassmorphism card ── */
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-premium;
+  }
+  .glass-light {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-card;
+  }
+
+  /* ── Premium card ── */
+  .card-premium {
+    @apply bg-surface-800/60 backdrop-blur-sm border border-surface-700/50 rounded-card shadow-card
+           transition-all duration-300 hover:shadow-card-hover hover:border-surface-600/50;
+  }
+
+  /* ── Gradient text ── */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400;
+  }
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300;
+  }
+
+  /* ── Primary button ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 
+           bg-gradient-to-r from-emerald-600 to-emerald-500 
+           text-white font-semibold rounded-button
+           shadow-glow-emerald
+           transition-all duration-300
+           hover:from-emerald-500 hover:to-emerald-400 hover:shadow-lg hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-md
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
+
+  /* ── Secondary / outline button ── */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           border border-surface-600 text-surface-200
+           font-semibold rounded-button
+           transition-all duration-300
+           hover:border-emerald-500/50 hover:text-emerald-400 hover:bg-emerald-500/5
+           active:bg-emerald-500/10;
+  }
+
+  /* ── Ghost button ── */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+           text-surface-300 font-medium rounded-button
+           transition-all duration-200
+           hover:text-white hover:bg-white/5;
+  }
+
+  /* ── Input field ── */
+  .input-field {
+    @apply w-full px-4 py-3 
+           bg-surface-800/50 border border-surface-700/50 rounded-button
+           text-surface-100 placeholder-surface-500
+           transition-all duration-200
+           focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20
+           hover:border-surface-600;
+  }
+
+  /* ── Badge ── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-emerald {
+    @apply badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+  }
+  .badge-cyan {
+    @apply badge bg-cyan-500/10 text-cyan-400 border border-cyan-500/20;
+  }
+  .badge-red {
+    @apply badge bg-red-500/10 text-red-400 border border-red-500/20;
+  }
+  .badge-amber {
+    @apply badge bg-amber-500/10 text-amber-400 border border-amber-500/20;
+  }
+
+  /* ── Skeleton shimmer ── */
+  .skeleton {
+    @apply bg-gradient-to-r from-surface-800 via-surface-700 to-surface-800
+           bg-[length:200%_100%] animate-shimmer rounded-lg;
+  }
+
+  /* ── Section container ── */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ── Stat card ── */
+  .stat-card {
+    @apply card-premium p-6 relative overflow-hidden;
+  }
+  .stat-card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-emerald-500 to-cyan-500;
+  }
+}
+
+@layer utilities {
+  /* ── Custom range slider (for calculators) ── */
+  input[type="range"] {
+    @apply appearance-none w-full h-2 rounded-full bg-surface-700 cursor-pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-5 h-5 rounded-full bg-emerald-500 cursor-pointer
+           shadow-glow-emerald border-2 border-emerald-400;
+    transition: all 0.15s ease;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    @apply bg-emerald-400 scale-110;
+  }
+  input[type="range"]::-moz-range-thumb {
+    @apply w-5 h-5 rounded-full bg-emerald-500 cursor-pointer border-2 border-emerald-400;
+  }
+
+  /* ── Material Tailwind dialog override ── */
+  .bg-black {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    margin: auto;
+  }
+  .not-blur {
+    backdrop-filter: none;
+  }
 }

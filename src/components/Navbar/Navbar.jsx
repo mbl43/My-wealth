@@ -1,25 +1,34 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import Badge from "@mui/material/Badge";
-import { IoCloseSharp, IoLogOutOutline } from "react-icons/io5";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { IoLogOutOutline } from "react-icons/io5";
+import { HiOutlineMenuAlt3, HiX } from "react-icons/hi";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
-import { RiAccountCircleFill } from "react-icons/ri";
 import { toast } from "react-toastify";
-import { IoIosNotifications } from "react-icons/io";
-import Switch from "../Darkmode/Switch";
+import { motion, AnimatePresence } from "framer-motion";
 
-const Navbar = ({ user }) => {
-  const [isMobile, setIsMobile] = useState(false); // State to toggle mobile menu
-  const toggleMenu = () => setIsMobile(!isMobile);
-  const [theme, setTheme] = useState("light");
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
+import { useUser } from "../../contextAPI";
 
+const Navbar = ({ user: propUser }) => {
+  const { user: contextUser } = useUser();
+  const [isMobile, setIsMobile] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  // Resolve user from prop or context safely
+  const user = propUser && typeof propUser === "object" && "user" in propUser
+    ? propUser.user
+    : propUser !== undefined
+      ? propUser
+      : contextUser;
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleMenu = () => setIsMobile(!isMobile);
 
   const handleLogout = async () => {
     try {
@@ -34,111 +43,145 @@ const Navbar = ({ user }) => {
     }
   };
 
-  return (
-    <div className="bg-[#0063c5] shadow-lg sticky top-0 z-50">
-      <div className="w-full max-h-20 px-4">
-        <div className="flex flex-row items-center max-w-7xl mx-auto justify-between py-4">
-          {/* Logo Section */}
-          <div className="md:text-3xl font-bold text-white sm:text-base sm:text-center">
-            <h1>
-              <Link
-                to="/"
-                className="hover:text-[#008000]-200 transition duration-300"
-              >
-                My Wealth
-              </Link>
-            </h1>
-          </div>
+  const navLinks = ["Home","Contact"];
 
-          {/* Navigation Links */}
-          <ul
-            className={`font-medium md:flex gap-x-3 transition-transform duration-300 ${
-              isMobile
-                ? "flex flex-col  z-10   w-full bg-[#051378] p-4 items-center  justify-center gap-y-4 absolute top-full left-0 right-0"
-                : "hidden md:flex"
-            }`}
-            onClick={() => setIsMobile(false)} // Close menu on link click
-          >
-            {["Home", "Services", "Contact"].map((text) => (
+  return (
+    <nav
+      className={`sticky top-0 z-50 transition-all duration-500 bg-gradient-to-t from-surface-850  via-surface-950 to-navy-950 ${
+        scrolled
+          ? "backdrop-blur-xl border-b border-surface-800/50 shadow-lg"
+          : "backdrop-blur-md border-b border-transparent"
+      }`}
+    >
+      <div className="section-container">
+        <div className="flex items-center justify-between h-16 md:h-18">
+          {/* ── Logo ── */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center shadow-glow-emerald group-hover:shadow-lg transition-shadow duration-300">
+              <span className="text-white font-bold text-sm">W</span>
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">
+              My <span className="text-gradient">Wealth</span>
+            </span>
+          </Link>
+
+          {/* ── Desktop Nav Links ── */}
+          <ul className="hidden md:flex items-center gap-1">
+            {navLinks.map((text) => (
               <li key={text}>
                 <NavLink
-                  style={({ isActive }) => ({
-                    fontWeight: isActive && "medium",
-                    color: isActive && "#4afc70",
-                  })}
                   to={text === "Home" ? "/" : `/${text.toLowerCase()}`}
-                  className="text-white hover:text-[#4afc70] transition duration-300 text-xl md:text-lg font-medium"
+                  className={({ isActive }) =>
+                    `px-4 py-2 rounded-button text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? "text-emerald-400 bg-emerald-500/10"
+                        : "text-surface-300 hover:text-white hover:bg-white/5"
+                    }`
+                  }
                 >
                   {text}
                 </NavLink>
               </li>
             ))}
           </ul>
-          <div className="flex space-x-4">
-            <div className="flex items-center justify-center t-0 relative -top-3">
-              <button onClick={toggleTheme}>
-                <Switch />
-              </button>
-            </div>
-           
-            {/* Logout Button (Visible only when logged in) */}
-            {user && (
-              <div className="flex items-center justify-center space-x-5">
-                {/* logout */}
 
-                <button onClick={handleLogout}>
-                  <IoLogOutOutline size={35} className="text-white" />
+          {/* ── Right Side Actions ── */}
+          <div className="flex items-center gap-3">
+            {user ? (
+              /* Logged-in state */
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-800/60 border border-surface-700/50">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">
+                      {user?.displayName?.charAt(0)?.toUpperCase() || "U"}
+                    </span>
+                  </div>
+                  <span className="text-sm text-surface-300 font-medium">
+                    {user?.displayName?.split(" ")[0] || "User"}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-button text-surface-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
+                  title="Logout"
+                >
+                  <IoLogOutOutline size={20} />
                 </button>
               </div>
-            )}
-           
-            {/* Hamburger Icon for Mobile */}
-            <div className="md:hidden flex items-center space-x-5">
-              {!user && (
-                <Link
-                  to="/auth"
-                  className="flex gap-x-1.5 justify-center items-center text-white"
-                >
-                  <RiAccountCircleFill size={30} /> SignUp{" "}
+            ) : (
+              /* Logged-out state */
+              <div className="hidden md:flex items-center gap-3">
+                <Link to="/login" className="btn-ghost text-sm">
+                  Login
                 </Link>
-              )}
-              <button onClick={toggleMenu} className="text-white text-3xl">
-                {isMobile ? <IoCloseSharp /> : <RxHamburgerMenu />}
-              </button>
-            </div>
+                <Link to="/auth" className="btn-primary text-sm !py-2 !px-5">
+                  Get Started
+                </Link>
+              </div>
+            )}
+
+            {/* ── Mobile Hamburger ── */}
+            <button
+              onClick={toggleMenu}
+              className="md:hidden p-2 rounded-button text-surface-300 hover:text-white hover:bg-white/5 transition-all"
+            >
+              {isMobile ? <HiX size={24} /> : <HiOutlineMenuAlt3 size={24} />}
+            </button>
           </div>
-          {/* Authentication Buttons (Visible only when not logged in) */}
-          {!user && (
-            <div className="hidden md:flex items-center space-x-4">
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#008000",
-                  fontFamily: "Poppins, Arial, sans-serif",
-                  fontSize: "16px",
-                  textTransform: "capitalize",
-                }}
-                className="font-medium text-white text-base px-5 py-2 rounded-lg hover:bg-[#4afc70] shadow-lg transition-transform transform hover:scale-105 duration-200 capitalize"
-              >
-                <Link to="/auth">Sign Up</Link>
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#008000",
-                  fontFamily: "Poppins, Arial, sans-serif",
-                  fontSize: "16px",
-                  textTransform: "capitalize",
-                }}
-                className="font-medium text-white text-base px-5 py-2 rounded-lg hover:bg-[#4afc70] shadow-lg transition-transform transform hover:scale-105 duration-200 capitalize"
-              >
-                <Link to="/login">Login</Link>
-              </Button>
-            </div>
-          )}
         </div>
       </div>
-    </div>
+
+      {/* ── Mobile Menu ── */}
+      <AnimatePresence>
+        {isMobile && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden border-t border-surface-800/50 bg-surface-950/95 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="section-container py-4 space-y-1">
+              {navLinks.map((text) => (
+                <NavLink
+                  key={text}
+                  to={text === "Home" ? "/" : `/${text.toLowerCase()}`}
+                  onClick={() => setIsMobile(false)}
+                  className={({ isActive }) =>
+                    `block px-4 py-3 rounded-button text-sm font-medium transition-all ${
+                      isActive
+                        ? "text-emerald-400 bg-emerald-500/10"
+                        : "text-surface-300 hover:text-white hover:bg-white/5"
+                    }`
+                  }
+                >
+                  {text}
+                </NavLink>
+              ))}
+
+              {!user && (
+                <div className="pt-3 border-t border-surface-800/50 space-y-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobile(false)}
+                    className="block text-center px-4 py-3 rounded-button text-sm font-medium text-surface-300 hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/auth"
+                    onClick={() => setIsMobile(false)}
+                    className="block text-center btn-primary text-sm"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
 

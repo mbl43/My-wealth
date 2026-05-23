@@ -1,21 +1,23 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Notfound = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-center">
-      <h1 className="text-6xl font-bold text-red-600">404</h1>
-      <h2 className="mt-4 text-2xl font-semibold">Oops! Page Not Found</h2>
-      <p className="mt-2 text-gray-600">
-        The page you are looking for does not exist. It might have been removed
-        or the URL might be incorrect.
-      </p>
-      <Link
-        to="/"
-        className="mt-6 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition-colors duration-200"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-surface-950 text-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        Go Back Home
-      </Link>
+        <h1 className="text-8xl font-bold text-gradient mb-4">404</h1>
+        <h2 className="text-2xl font-semibold text-white mb-2">Page Not Found</h2>
+        <p className="text-surface-400 mb-8 max-w-sm mx-auto">
+          The page you are looking for doesn't exist or has been moved.
+        </p>
+        <Link to="/" className="btn-primary">
+          Go Back Home
+        </Link>
+      </motion.div>
     </div>
   );
 };
